@@ -1,0 +1,124 @@
+<div class="container" style="max-width: 900px; margin: auto; padding: 2rem;">
+  <h2 class="text-center">Cadastro de Usuário</h2>
+
+  <!-- Cadastro de Usuário -->
+  <mat-card class="mb-4">
+    <mat-card-title>Dados do Usuário</mat-card-title>
+    <mat-card-content>
+      <form (ngSubmit)="salvar()" #cadastroForm="ngForm" class="form-group">
+        <mat-form-field appearance="fill" class="w-100 mb-3">
+          <mat-label>Nome</mat-label>
+          <input matInput [(ngModel)]="usuario.nome" name="nome" required />
+        </mat-form-field>
+
+        <mat-form-field appearance="fill" class="w-100 mb-3">
+          <mat-label>Email</mat-label>
+          <input matInput type="email" [(ngModel)]="usuario.email" name="email" required />
+        </mat-form-field>
+
+        <mat-form-field appearance="fill" class="w-100 mb-3">
+          <mat-label>Senha</mat-label>
+          <input matInput type="password" [(ngModel)]="usuario.senha" name="senha" required />
+        </mat-form-field>
+
+      </form>
+    </mat-card-content>
+  </mat-card>
+
+  <!-- Endereços -->
+  <mat-card class="mb-4" *ngFor="let endereco of usuario.enderecos; let i = index">
+    <mat-card-title>
+      Endereço {{ i + 1 }}
+      <button mat-icon-button color="warn" (click)="removerEndereco(i)" *ngIf="usuario.enderecos.length > 1">
+        <mat-icon>delete</mat-icon>
+      </button>
+    </mat-card-title>
+    <mat-card-content>
+      <div class="row">
+        <mat-form-field appearance="fill" class="col-md-6 mb-2">
+          <mat-label>Rua</mat-label>
+          <input matInput [(ngModel)]="endereco.rua" name="rua{{i}}" />
+        </mat-form-field>
+        <mat-form-field appearance="fill" class="col-md-2 mb-2">
+          <mat-label>Número</mat-label>
+          <input matInput [(ngModel)]="endereco.numero" name="numero{{i}}" />
+        </mat-form-field>
+        <mat-form-field appearance="fill" class="col-md-4 mb-2">
+          <mat-label>Complemento</mat-label>
+          <input matInput [(ngModel)]="endereco.complemento" name="complemento{{i}}" />
+        </mat-form-field>
+        <mat-form-field appearance="fill" class="col-md-6 mb-2">
+          <mat-label>Cidade</mat-label>
+          <input matInput [(ngModel)]="endereco.cidade" name="cidade{{i}}" />
+        </mat-form-field>
+        <mat-form-field appearance="fill" class="col-md-2 mb-2">
+          <mat-label>Estado</mat-label>
+          <mat-select [(ngModel)]="endereco.estado" name="estado{{i}}">
+            <mat-option *ngFor="let estado of estados" [value]="estado">{{ estado }}</mat-option>
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field appearance="fill" class="col-md-4 mb-2">
+          <mat-label>CEP</mat-label>
+          <input matInput [(ngModel)]="endereco.cep" name="cep{{i}}" mask="00000-000" />
+        </mat-form-field>
+      </div>
+    </mat-card-content>
+  </mat-card>
+  <button mat-stroked-button color="primary" (click)="adicionarEndereco()">Adicionar Endereço</button>
+
+  <mat-divider class="my-4"></mat-divider>
+
+  <!-- Telefones -->
+  <h4>Telefones</h4>
+  <mat-card class="mb-4" *ngFor="let telefone of usuario.telefones; let j = index">
+    <mat-card-title>
+      Telefone {{ j + 1 }}
+      <button mat-icon-button color="warn" (click)="removerTelefone(j)" *ngIf="usuario.telefones.length > 1">
+        <mat-icon>delete</mat-icon>
+      </button>
+    </mat-card-title>
+    <mat-card-content>
+      <div class="row">
+        <mat-form-field appearance="fill" class="col-md-3 mb-2">
+          <mat-label>DDD</mat-label>
+          <input matInput [(ngModel)]="telefone.ddd" name="ddd{{j}}" mask="00" />
+        </mat-form-field>
+        <mat-form-field appearance="fill" class="col-md-6 mb-2">
+          <mat-label>Número</mat-label>
+          <input matInput [(ngModel)]="telefone.numero" name="numeroTelefone{{j}}" mask="00000-0000" />
+        </mat-form-field>
+      </div>
+    </mat-card-content>
+  </mat-card>
+  <button mat-stroked-button color="primary" (click)="adicionarTelefone()">Adicionar Telefone</button>
+
+  <div class="text-center mt-4">
+    <button mat-raised-button color="accent" (click)="modoEdicao ? atualizarUsuario(usuarioEditandoId!) : salvar()">
+      {{ modoEdicao ? 'Atualizar' : 'Salvar' }}
+    </button>
+  </div>
+
+  <!-- Listagem de Usuários -->
+  <mat-divider class="my-4"></mat-divider>
+
+  <h3 class="text-center">Usuários Cadastrados</h3>
+  <div *ngFor="let u of usuarios">
+    <mat-card class="mb-4">
+      <mat-card-title>{{ u.nome }}</mat-card-title>
+      <mat-card-subtitle>{{ u.email }}</mat-card-subtitle>
+      <mat-card-content>
+        <div>
+          <strong>Endereço:</strong> {{ u.enderecos[0].rua }}, {{ u.enderecos[0].numero }} - {{ u.enderecos[0].cidade }} - {{ u.enderecos[0].estado }} - {{ u.enderecos[0].cep }}
+        </div>
+        <div>
+          <strong>Telefone:</strong> {{ u.telefones[0].ddd }} - {{ u.telefones[0].numero }}
+        </div>
+      </mat-card-content>
+      <mat-card-actions>
+        <button mat-button color="primary" *ngIf="u.id" (click)="buscarPorId(u.id)">Editar</button>
+        <button mat-button color="warn" *ngIf="u.id" (click)="deletarUsuario(u.id)">Deletar</button>
+      </mat-card-actions>
+    </mat-card>
+  </div>
+
+</div>
